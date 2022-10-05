@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/ping', function (){
+    $array = ['messagte' => 'pong'];
+    return $array;
+});
 
 Route::prefix('user')->group(function (){
     Route::post('/create', [UserController::class, 'create']);
