@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -65,6 +66,19 @@ class UserController extends Controller
         $array['message'] = 'E-mail ou senha incorretos!';
         return response($array, 500);
     }
+    function loginWeb(Request $r)
+    {
+        if (!Auth::attempt($r->only('email', 'password'))) {
+            // return response()->json([
+            //     'message' => 'E-mail ou senha incorretos!'
+            // ], 401);
+            throw ValidationException::withMessages([
+                'message' => 'E-mail ou senha incorretos!'
+            ]);
+        }
+        $r->session()->regenerate();
+        return response()->json(null, 201);
+    }
 
     function logout(Request $r)
     {
@@ -79,6 +93,13 @@ class UserController extends Controller
 
         $array['message'] = 'Erro ao deslogar!';
         return $array;
+    }
+
+    function logoutWeb(Request $r)
+    {
+        Auth::logout();
+        $r->session()->invalidate();
+        $r->session()->regenerateToken();
     }
 
     function delete(Request $r)
@@ -130,5 +151,12 @@ class UserController extends Controller
 
         $array['message'] = 'Senha atual não bate!';
         return $array;
+    }
+
+    public function auth(Request $request)
+    {
+        return response()->json([
+            'data' => $request->user(),
+        ]);
     }
 }
