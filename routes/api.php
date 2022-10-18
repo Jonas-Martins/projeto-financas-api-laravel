@@ -25,11 +25,9 @@ Route::get('/ping', function () {
 Route::prefix('user')->group(function () {
     Route::post('/create', [UserController::class, 'create']);
 
-    Route::post('/login-manual', [UserController::class, 'login']);
-    Route::post('/login', [UserController::class, 'loginWeb']);
+    Route::post('/login', [UserController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->post('/logout-manual', [UserController::class, 'logout']);
-    Route::post('/logout', [UserController::class, 'logoutWeb']);
+    Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
 
     Route::middleware('auth:sanctum')->put('/update', [UserController::class, 'update']);
 
